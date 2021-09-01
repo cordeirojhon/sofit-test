@@ -1,0 +1,11 @@
+<section>
+  <div class="container">
+    <p>Por favor, insira seu email.</p>
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email" required>
+      <p>Preencha seu email para continuar</p>
+      <button type="submit" [disabled]="!authForm.valid">Acessar</button>
+    </form>
+  </div>
+</section>

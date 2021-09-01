@@ -1,0 +1,77 @@
+<section class="form-items">
+  <div class="container">
+    <div class="header-container">
+      <div class="user">
+        <span>{{user}}</span>
+        <button class="logoff danger" (click)="logoff()">Sair</button>
+      </div>
+      <button (click)="isNewForm = true; showSimpleModal = true">Nova despesa</button>
+    </div>
+    <div class="main-container">
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>Data</th>
+          <th>Item</th>
+          <th>Valor</th>
+          <th>Ações</th>
+        </tr>
+        <tr *ngFor="let expense of expenses">
+          <td><span class="overflow">{{expense._id}}</span></td>
+          <td>{{expense.date | date: 'd/M/y'}}</td>
+          <td>{{expense.item}}</td>
+          <td>{{expense.value}}</td>
+          <td>
+            <div class="buttons">
+              <button class="edit" (click)="edit(expense._id)">Editar</button>
+              <button class="exclude danger" (click)="getExpense(expense._id)">Excluir</button>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="simple-modal" *ngIf="showSimpleModal">
+  <div class="container">
+    <div class="form-insert container-box" *ngIf="isNewForm">
+      <p><strong>Inserir nova despesa</strong></p>
+      <form [formGroup]="newExpenseForm" (ngSubmit)="onSubmitNew()">
+        <label for="item">Item</label>
+        <input type="text" id="item" formControlName="item" required>
+        <label for="valor">Valor</label>
+        <input type="number" id="valor" formControlName="valor" required>
+        <div class="buttons">
+          <button class="cancel" (click)="isNewForm = false; showSimpleModal = false">Cancelar</button>
+          <button type="submit" [disabled]="!newExpenseForm.valid">Inserir</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="form-edit container-box" *ngIf="isEditForm">
+      <p><strong>Editar item {{editId}}</strong></p>
+      <form [formGroup]="editExpenseForm" (ngSubmit)="onSubmitEdit()">
+        <label for="item">Item</label>
+        <input type="text" id="item" formControlName="item">
+        <label for="valor">Valor</label>
+        <input type="number" id="valor" formControlName="valor">
+        <div class="buttons">
+          <button class="cancel" (click)="isEditForm = false; showSimpleModal = false">Cancelar</button>
+          <button type="submit" [disabled]="!editExpenseForm.valid">Inserir</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="exclude-conf container-box" *ngIf="excludeConf">
+      <p class="danger"><strong>Tem certeza que quer excluir o <span>item {{expenseToExclude._id}}</span>?</strong></p>
+      <p><strong>Data</strong>: {{expenseToExclude.date | date: 'd/M/y'}}</p>
+      <p><strong>Item</strong>: {{expenseToExclude.item}}</p>
+      <p><strong>Valor</strong>: {{expenseToExclude.value}}</p>
+      <div class="buttons">
+        <button class="cancel" (click)="excludeConf = false; showSimpleModal = false">Cancelar</button>
+        <button class="exclude danger" (click)="exclude(expenseToExclude._id)">Excluir</button>
+      </div>
+    </div>
+  </div>
+</div>
